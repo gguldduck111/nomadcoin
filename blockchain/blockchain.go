@@ -54,6 +54,6 @@ func (b *blockchain) AddBlock(data string)  {
 	b.blocks = append(b.blocks, createBlock(data))
 }
 
-func (b *blockchain) AllBlock() []*Block {
+func (b *blockchain) AllBlocks() []*Block {
 	return b.blocks
 }
