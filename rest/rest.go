@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gguldduck111/nomadcoin/Util"
 	"github.com/gguldduck111/nomadcoin/blockchain"
 	"github.com/gorilla/mux"
 )
@@ -67,14 +68,12 @@ func documentation(writer http.ResponseWriter, request *http.Request) {
 func blocks(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
-		return
-		// json.NewEncoder(w).Encode(blockchain.GetBlockchain().AllBlocks()) 
+		json.NewEncoder(w).Encode(blockchain.Blockchain().Blocks()) 
 	case "POST":
-		return 
-		// var addBlockBody addBlockBody
-		// Util.HandleErr(json.NewDecoder(r.Body).Decode(&addBlockBody))
-		// blockchain.GetBlockchain().AddBlock(addBlockBody.Message)
-		// w.WriteHeader(http.StatusCreated)
+		var addBlockBody addBlockBody
+		Util.HandleErr(json.NewDecoder(r.Body).Decode(&addBlockBody))
+		blockchain.Blockchain().AddBlock(addBlockBody.Message)
+		w.WriteHeader(http.StatusCreated)
 	}
 }
 
