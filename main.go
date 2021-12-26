@@ -7,6 +7,5 @@ import (
 
 func main() {
 	defer db.DB().Close()
-
 	cli.Start()
 }

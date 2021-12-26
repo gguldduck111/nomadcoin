@@ -1,8 +1,6 @@
 package db
 
 import (
-	"fmt"
-
 	"github.com/boltdb/bolt"
 	"github.com/gguldduck111/nomadcoin/Util"
 )
@@ -68,7 +66,6 @@ func Block(hash string) []byte{
 	
 	DB().View(func(t *bolt.Tx) error {
 		bucket := t.Bucket([]byte(blocksBucket))
-		fmt.Println(hash,[]byte(hash))
 		data = bucket.Get([]byte(hash))	
 		return nil
 	})

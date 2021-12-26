@@ -1,6 +1,7 @@
 package blockchain
 
 import (
+	"fmt"
 	"sync"
 
 	"github.com/gguldduck111/nomadcoin/Util"
@@ -52,10 +53,13 @@ func Blockchain() *blockchain {
 			b = &blockchain{"", 0}
 			// Search for checkpoint on the DB
 			checkpoint := db.Checkpoint();
+			fmt.Println(checkpoint)
 			if checkpoint == nil {
+				fmt.Println("gene")
 				b.AddBlock("Genesis")
 			}else{
 				// Restore b from bytes
+				fmt.Println("check")
 				b.restore(checkpoint) 
 			}
 		})
