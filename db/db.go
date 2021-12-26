@@ -1,6 +1,8 @@
 package db
 
 import (
+	"fmt"
+
 	"github.com/boltdb/bolt"
 	"github.com/gguldduck111/nomadcoin/Util"
 )
@@ -42,7 +44,7 @@ func SaveBlock(hash string, data []byte) {
 	Util.HandleErr(err)
 }
 
-func saveCheckpoint(data []byte) {
+func SaveCheckpoint(data []byte) {
 	err := DB().Update(func(t *bolt.Tx) error {
 		bucket := t.Bucket([]byte(dataBucket))
 		err := bucket.Put([]byte(checkpoint), data)
@@ -66,6 +68,7 @@ func Block(hash string) []byte{
 	
 	DB().View(func(t *bolt.Tx) error {
 		bucket := t.Bucket([]byte(blocksBucket))
+		fmt.Println(hash,[]byte(hash))
 		data = bucket.Get([]byte(hash))	
 		return nil
 	})
