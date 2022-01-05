@@ -45,6 +45,23 @@ func (t *Tx) getId(){
 	t.Id = Util.Hash(t)
 }
 
+func (m *mempool) AddTx(to string, amount int) error{
+	tx, err := makeTx("sunjung",to, amount)
+	if err != nil{
+		return err
+	}
+	m.Txs = append(m.Txs, tx)
+	return nil
+ }
+
+func (m *mempool) TxToConfirm() []*Tx {
+	coinbase := makeCoinbaseTx("sunjung")
+	txs := m.Txs
+	txs = append(txs, coinbase)
+	m.Txs = nil
+	return txs
+}
+
 func isOnMempool(uTxOut *UTxOut) bool{
 	exists := false
 	Outer:
@@ -79,13 +96,13 @@ func isOnMempool(uTxOut *UTxOut) bool{
  }
 
 func makeTx(from, to string, amount int) (*Tx, error){ 
-	if Blockchain().BalanceByAddress(from) < amount{
+	if BalanceByAddress(from,Blockchain()) < amount{
 		return nil, errors.New("not enough money")
 	}
 	var txOuts []*TxOut
 	var txIns []*TxIn
 	total := 0
-	uTxOuts := Blockchain().UTxOutsByAddress(from)
+	uTxOuts := UTxOutsByAddress(from,Blockchain())
 	for _, uTxOut := range uTxOuts{
 		if total >= amount {
 			break
@@ -110,21 +127,4 @@ func makeTx(from, to string, amount int) (*Tx, error){
 	}
 	tx.getId()
 	return tx, nil
-}
-
- func (m *mempool) AddTx(to string, amount int) error{
-	tx, err := makeTx("sunjung",to, amount)
-	if err != nil{
-		return err
-	}
-	m.Txs = append(m.Txs, tx)
-	return nil
- }
-
-func (m *mempool) TxToConfirm() []*Tx {
-	coinbase := makeCoinbaseTx("sunjung")
-	txs := m.Txs
-	txs = append(txs, coinbase)
-	m.Txs = nil
-	return txs
 }

@@ -53,12 +53,12 @@ func FindBlock(hash string) (*Block,error){
 	return block, nil 
 }
 
-func CreateBlock(prevHash string, height int) *Block {
+func CreateBlock(prevHash string, height int, diff int) *Block {
 	block := &Block{
 		Hash:     "",
 		PrevHash: prevHash,
 		Height:   height,
-		Difficulty: Blockchain().difficulty(),
+		Difficulty: diff,
 		Nonce: 0,
 	}
 
