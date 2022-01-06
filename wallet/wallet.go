@@ -1,12 +1,9 @@
 package wallet
 
 import (
-	"crypto/ecdsa"
-	"crypto/elliptic"
-	"crypto/rand"
 	"crypto/x509"
 	"encoding/hex"
-	"fmt"
+	"math/big"
 
 	"github.com/gguldduck111/nomadcoin/Util"
 )
@@ -18,20 +15,16 @@ const (
 )
 
 func Start(){
-	privateKey, err := ecdsa.GenerateKey(elliptic.P256(),rand.Reader)
+	privBytes, err := hex.DecodeString(privateKey)
+	Util.HandleErr(err)
+	_, err = x509.ParseECPrivateKey(privBytes) 
 	Util.HandleErr(err)
 
-	keyAsByte,err := x509.MarshalECPrivateKey(privateKey)
-	Util.HandleErr(err)
+	sigBytes, err := hex.DecodeString(signature)
+	rBytes := sigBytes[:len(sigBytes)/2]
+	sBytes := sigBytes[len(sigBytes)/2:]
 
-	fmt.Printf("%x\n",keyAsByte)
-	
-	hashAsByte, err := hex.DecodeString(hashedMessage)
-	Util.HandleErr(err)
-	r, s, err := ecdsa.Sign(rand.Reader,privateKey,hashAsByte)
-	Util.HandleErr(err)
-	signature := append(r.Bytes(),s.Bytes()...)
-	fmt.Printf("%x\n",signature)
-	ok := ecdsa.Verify(&privateKey.PublicKey,hashAsByte,r,s)
-	fmt.Println(ok)
+	var bigR, bigS = big.Int{}, big.Int{}
+	bigR.SetBytes(rBytes)
+	bigS.SetBytes(sBytes)
 }

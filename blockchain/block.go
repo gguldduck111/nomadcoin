@@ -19,11 +19,11 @@ type Block struct {
 	Transactions []*Tx 	`json:"transactions"`
 }
 
+var ErrNotFound = errors.New("block not found")
+
 func (b *Block) persist() {
 	db.SaveBlock(b.Hash, Util.ToBytes(b))
 }
-
-var ErrNotFound = errors.New("block not found")
 
 func (b *Block) restore(data []byte){
 	Util.FromBytes(b, data)
